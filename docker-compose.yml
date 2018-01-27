@@ -1,0 +1,33 @@
+version: "2"
+services:
+  web:
+    image: nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./code:/code
+      - ./nginx/site.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - code-network
+  mysql:
+    image: mysql
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+    networks:
+      - code-network
+  php:
+    build: ./php/php70/
+    volumes:
+      - ./code:/code
+    networks:
+      - code-network
+
+networks:
+  code-network:
+    driver: bridge
